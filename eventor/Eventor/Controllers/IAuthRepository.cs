@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Eventor.Models;
 
 namespace Eventor.Controllers
 {
@@ -9,6 +10,8 @@ namespace Eventor.Controllers
     {
         //TODO: Login , Register , UserExist, OTP Validated, 2-Factor Authentication
         bool Login(string username,string password);
+
+        bool Register(User user) ;
         
     }
 }

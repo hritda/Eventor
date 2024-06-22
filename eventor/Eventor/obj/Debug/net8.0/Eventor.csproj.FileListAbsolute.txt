@@ -33,3 +33,4 @@ C:\Users\hrith\Desktop\assignment\eventor\Eventor\obj\Debug\net8.0\ref\Eventor.d
 C:\Users\hrith\Desktop\assignment\eventor\Eventor\bin\Debug\net8.0\Microsoft.DotNet.PlatformAbstractions.dll
 C:\Users\hrith\Desktop\assignment\eventor\Eventor\bin\Debug\net8.0\Microsoft.Extensions.DependencyModel.dll
 C:\Users\hrith\Desktop\assignment\eventor\Eventor\bin\Debug\net8.0\Newtonsoft.Json.dll
+C:\Users\hrith\Desktop\assignment\eventor\Eventor\obj\Debug\net8.0\Eventor.sourcelink.json

@@ -26,16 +26,14 @@ namespace Eventor.Controllers
             return Ok(user);
         }
 
-        [HttpGet("login")]
-        public IActionResult LoginUser()
+        [HttpPost("login")]
+        public IActionResult LoginUser([FromBody] LoginDto loginDto)
         {
-            LoginDto loginDto = new LoginDto();
-            loginDto.username = "Hrithik";
-            loginDto.password = "h00021132";
             var result = _authRepository.Login(loginDto.username, loginDto.password);
 
+
             loginDto.IsAutheticated = result;
-            if (loginDto != null)
+            if (loginDto?.IsAutheticated != false)
             {
                 return Ok(loginDto);
             }
@@ -44,5 +42,14 @@ namespace Eventor.Controllers
                 return BadRequest();
             }
         }
+
+        [HttpPost("register")]
+        public IActionResult RegisterUser([FromBody] User user){
+            var result = _authRepository.Register(user);
+            if(result){
+                return Ok(user);
+            } else 
+            return StatusCode(500);
+        } 
     }
 }
