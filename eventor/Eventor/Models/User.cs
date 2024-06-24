@@ -7,7 +7,7 @@ using System.Xml.Schema;
 
 namespace Eventor.Models
 {
-    public class User
+    public class User:BaseModel
     {
        public List<UserType>? UserTypes { get; set;}=new List<UserType>();
        public int Id { get; set; }
