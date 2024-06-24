@@ -31,7 +31,8 @@ namespace Eventor.Database
                 LastName = "Mistry",
                 Password = "h00021132",
                 Email = "hrithik@gmail.com",
-                UserTypes = [dbcontext.UserTypes.Local.Single(p => p.Code == "0001")]
+                UserTypes = [dbcontext.UserTypes.Local.Single(p => p.Code == "0001"),
+                dbcontext.UserTypes.Local.Single(p => p.Code == "0002")]
             });
             dbcontext.Users.Add(new User()
             {
