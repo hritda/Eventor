@@ -44,12 +44,15 @@ namespace Eventor.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult RegisterUser([FromBody] User user){
+        public IActionResult RegisterUser([FromBody] RegisterDto user){
             var result = _authRepository.Register(user);
+
             if(result){
                 return Ok(user);
-            } else 
-            return StatusCode(500);
+            } else {
+             
+              return new ObjectResult("User already exists, please login") {StatusCode = 403};
+            }
         } 
     }
 }

@@ -7,13 +7,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Eventor.Database
 {
-    public class DataContext : DbContext
+    public class DataContext(DbContextOptions<DataContext> options) : DbContext(options)
     {
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-
-            optionsBuilder.UseSqlite(@"DataSource=eventor.db;");
-        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
