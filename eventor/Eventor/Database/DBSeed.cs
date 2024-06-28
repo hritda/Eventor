@@ -8,10 +8,10 @@ namespace Eventor.Database
 {
     public class DBSeed
     {
-        public static void Seed(DataContext dbcontext)
+        public static async Task Seed(DataContext dbcontext)
         {
-            dbcontext.Database.EnsureDeleted();
-            dbcontext.Database.EnsureCreated();
+           
+            if (dbcontext.Users.Any()) return;
             dbcontext.UserTypes.Add(new UserType
             {
                 Name = "Organiser",

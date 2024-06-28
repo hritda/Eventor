@@ -10,7 +10,7 @@ namespace Eventor.Controllers
     public interface IAuthRepository
     {
         //TODO: Login , Register , UserExist, OTP Validated, 2-Factor Authentication
-        bool Login(string username,string password);
+        LoginDto Login(LoginDto loginDto);
 
         bool Register(RegisterDto user) ;
         

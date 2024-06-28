@@ -3,8 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Eventor.Database;
+using Eventor.Models;
 
-namespace Eventor.Helpers.User
+
+namespace Eventor.Helpers.UserHelperFunctions
+
 {
     public  class UserHelper
     {
@@ -12,10 +15,11 @@ namespace Eventor.Helpers.User
         public UserHelper(DataContext context){
             _dbcontext = context;
         }
-        public bool IsUserExist(string email){
-            bool userExists = _dbcontext.Users.Any(u => u.Email == email);
-            if(userExists) return true ;
-            return false;
+        public User IsUserExistByEmail(string email){
+            User user= _dbcontext.Users.FirstOrDefault(u => u.Email == email);
+            if(user!=null) return user ;
+            return null;
         }
+        
     }
 }

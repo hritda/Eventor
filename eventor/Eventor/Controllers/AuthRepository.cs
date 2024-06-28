@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Eventor.Models;
-using Eventor.Helpers.User;
+using Eventor.Helpers.UserHelperFunctions;
 using SQLitePCL;
 using Eventor.Database;
 using System.Runtime.InteropServices;
 using Eventor.Dtos;
+using Microsoft.AspNetCore.Mvc;
 namespace Eventor.Controllers
 {
   public class AuthRepository : IAuthRepository
@@ -19,18 +20,29 @@ namespace Eventor.Controllers
       _context = context;
       _helper = helper;
     }
-    public bool Login(string username, string password)
+    public LoginDto Login(LoginDto loginDto)
     {
-      return true;
+      User user = _helper.IsUserExistByEmail(loginDto.Email);
+     if (user==null)
+      {
+        loginDto.IsUserPresent = false;
+        return loginDto;
+      }
+      loginDto.IsUserPresent = true ; 
+      if(user.Password == loginDto.Password){
+        loginDto.IsPasswordCorrect = true ;
+      } else loginDto.IsPasswordCorrect = false;
+
+      return loginDto;
     }
-    public bool Register(RegisterDto user)
-    {
-      if (_helper.IsUserExist(user.Email))
+    public bool Register(RegisterDto reguser)
+    {  User user = _helper.IsUserExistByEmail(reguser.Email);
+      if (user!=null)
       {
         return false;
       }
       //get the list of usertype objects based on code
-      List<string> utypeCodes = user.UserTypeCodes;
+      List<string> utypeCodes = reguser.UserTypeCodes;
       List<UserType> utypes = new List<UserType>();
       foreach (string userTypeCode in utypeCodes)
       {

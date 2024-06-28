@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\hrith\\Desktop\\assignment\\eventor\\Eventor\\Eventor.csproj": {}
+    "C:\\Users\\hrith\\Desktop\\assignment\\Eventor\\eventor\\Eventor.csproj": {}
   },
   "projects": {
-    "C:\\Users\\hrith\\Desktop\\assignment\\eventor\\Eventor\\Eventor.csproj": {
+    "C:\\Users\\hrith\\Desktop\\assignment\\Eventor\\eventor\\Eventor.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hrith\\Desktop\\assignment\\eventor\\Eventor\\Eventor.csproj",
+        "projectUniqueName": "C:\\Users\\hrith\\Desktop\\assignment\\Eventor\\eventor\\Eventor.csproj",
         "projectName": "Eventor",
-        "projectPath": "C:\\Users\\hrith\\Desktop\\assignment\\eventor\\Eventor\\Eventor.csproj",
+        "projectPath": "C:\\Users\\hrith\\Desktop\\assignment\\Eventor\\eventor\\Eventor.csproj",
         "packagesPath": "C:\\Users\\hrith\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hrith\\Desktop\\assignment\\eventor\\Eventor\\obj\\",
+        "outputPath": "C:\\Users\\hrith\\Desktop\\assignment\\Eventor\\eventor\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\hrith\\AppData\\Roaming\\NuGet\\NuGet.Config"

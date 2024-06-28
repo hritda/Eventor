@@ -1,6 +1,6 @@
 using Eventor.Controllers;
 using Eventor.Database;
-using Eventor.Helpers.User;
+using Eventor.Helpers.UserHelperFunctions;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -36,7 +36,8 @@ var services = scope.ServiceProvider;
 try
 {
     var context = services.GetRequiredService<DataContext>();
-    DBSeed.Seed(context);
+    await context.Database.MigrateAsync();
+    await DBSeed.Seed(context);
 }
 catch (Exception ex)
 {

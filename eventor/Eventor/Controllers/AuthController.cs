@@ -29,17 +29,18 @@ namespace Eventor.Controllers
         [HttpPost("login")]
         public IActionResult LoginUser([FromBody] LoginDto loginDto)
         {
-            var result = _authRepository.Login(loginDto.username, loginDto.password);
-
-
-            loginDto.IsAutheticated = result;
-            if (loginDto?.IsAutheticated != false)
+            loginDto.IsPasswordCorrect = false;
+            loginDto.IsUserPresent = false ;
+            LoginDto loginDto1 = _authRepository.Login(loginDto);
+            if(loginDto1.IsUserPresent == false)
+             return new ObjectResult("User doesnt exist, please create one") {StatusCode = 403};
+            if (loginDto1?.IsPasswordCorrect!= false)
             {
-                return Ok(loginDto);
+                return Ok(loginDto1);
             }
             else
             {
-                return BadRequest();
+                return new ObjectResult("Invalid credentials") {StatusCode = 403};
             }
         }
 

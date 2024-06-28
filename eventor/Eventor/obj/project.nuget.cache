@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "G7lRkX+TK74=",
+  "dgSpecHash": "m6TYhjfcanA=",
   "success": true,
-  "projectFilePath": "C:\\Users\\hrith\\Desktop\\assignment\\eventor\\Eventor\\Eventor.csproj",
+  "projectFilePath": "C:\\Users\\hrith\\Desktop\\assignment\\Eventor\\eventor\\Eventor.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hrith\\.nuget\\packages\\microsoft.aspnetcore.authentication.abstractions\\2.2.0\\microsoft.aspnetcore.authentication.abstractions.2.2.0.nupkg.sha512",
     "C:\\Users\\hrith\\.nuget\\packages\\microsoft.aspnetcore.authentication.core\\2.2.0\\microsoft.aspnetcore.authentication.core.2.2.0.nupkg.sha512",
