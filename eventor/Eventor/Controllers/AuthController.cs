@@ -28,32 +28,25 @@ namespace Eventor.Controllers
 
         [HttpPost("login")]
         public IActionResult LoginUser([FromBody] LoginDto loginDto)
-        {
-            loginDto.IsPasswordCorrect = false;
-            loginDto.IsUserPresent = false ;
-            LoginDto loginDto1 = _authRepository.Login(loginDto);
-            if(loginDto1.IsUserPresent == false)
-             return new ObjectResult("User doesnt exist, please create one") {StatusCode = 403};
-            if (loginDto1?.IsPasswordCorrect!= false)
-            {
-                return Ok(loginDto1);
+        {  LoginResponseDto loginResponse = new LoginResponseDto();
+            
+            loginResponse = _authRepository.Login(loginDto);
+            if(loginResponse.StatusCode == 200){
+               return Ok(loginResponse) ;
+            } else {
+                return BadRequest(loginResponse);
             }
-            else
-            {
-                return new ObjectResult("Invalid credentials") {StatusCode = 403};
-            }
+            
         }
 
         [HttpPost("register")]
         public IActionResult RegisterUser([FromBody] RegisterDto user){
-            var result = _authRepository.Register(user);
+            var registerResponse = new RegisterResponseDto();
+            registerResponse = _authRepository.Register(user);
 
-            if(result){
-                return Ok(user);
-            } else {
-             
-              return new ObjectResult("User already exists, please login") {StatusCode = 403};
-            }
+            if(registerResponse.StatusCode == 200){
+                return Ok(registerResponse);
+            } else return BadRequest(registerResponse);
         } 
     }
 }

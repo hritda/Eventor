@@ -10,7 +10,11 @@ namespace Eventor.Database
     {
         public static async Task Seed(DataContext dbcontext)
         {
-           
+            // var last = dbcontext.Users.OrderByDescending(s => s.Id).FirstOrDefault();
+            // dbcontext.Users.Remove(last);
+            // dbcontext.SaveChanges();
+            // Console.WriteLine("last record deleted");
+
             if (dbcontext.Users.Any()) return;
             dbcontext.UserTypes.Add(new UserType
             {

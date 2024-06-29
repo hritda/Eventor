@@ -20,44 +20,60 @@ namespace Eventor.Controllers
       _context = context;
       _helper = helper;
     }
-    public LoginDto Login(LoginDto loginDto)
-    {
-      User user = _helper.IsUserExistByEmail(loginDto.Email);
+    public LoginResponseDto Login(LoginDto loginDto)
+    { var loginResponse = new LoginResponseDto();
+      Console.WriteLine($"UserType:{loginDto.UserType}");
+      User user = _helper.IsUserExistByEmail(loginDto?.Email);
      if (user==null)
       {
-        loginDto.IsUserPresent = false;
-        return loginDto;
-      }
-      loginDto.IsUserPresent = true ; 
-      if(user.Password == loginDto.Password){
-        loginDto.IsPasswordCorrect = true ;
-      } else loginDto.IsPasswordCorrect = false;
+         loginResponse.Message ="User doesnt exist, please register";
+         loginResponse.StatusCode = 404 ;
 
-      return loginDto;
+      }
+      
+      if(user?.Password == loginDto.Password){
+        loginResponse.Message ="logged in successfully";
+        loginResponse.Token = Guid.NewGuid().ToString();
+        //loginDto.IsPasswordCorrect = true ;
+
+      } else {
+       
+         loginResponse.Message ="invalid credentials";
+         loginResponse.StatusCode = 404 ;
+
+      }
+
+      return loginResponse;
     }
-    public bool Register(RegisterDto reguser)
-    {  User user = _helper.IsUserExistByEmail(reguser.Email);
+    public RegisterResponseDto Register(RegisterDto reguser)
+    { var registerResponse = new RegisterResponseDto();
+      User user = _helper.IsUserExistByEmail(reguser.Email);
       if (user!=null)
       {
-        return false;
+        registerResponse.StatusCode = 400 ;
+        registerResponse.Message = "User already exists, please login with email";
+        return registerResponse;
       }
       //get the list of usertype objects based on code
       List<string> utypeCodes = reguser.UserTypeCodes;
-      List<UserType> utypes = new List<UserType>();
+      List<UserType> utypes = [];
       foreach (string userTypeCode in utypeCodes)
       {
         var utypeobj = _context.UserTypes.Where(ut => ut.Code == userTypeCode).FirstOrDefault();
         utypes.Add(utypeobj);
       }
-      User u = new User();
-      u.FirstName = user.FirstName;
-      u.LastName = user.LastName;
-      u.Email = user.Email;
-      u.Password = user.Password;
-      u.UserTypes = utypes;
-      _context.Add(u);
+            User u = new User
+            {
+                FirstName = reguser.FirstName,
+                LastName = reguser.LastName,
+                Email = reguser.Email,
+                Password = reguser.Password,
+                UserTypes = utypes
+            };
+            _context.Add(u);
       _context.SaveChanges();
-      return true;
+      registerResponse.Message = "You have been registered successfully";
+      return registerResponse;
     }
   }
 }
