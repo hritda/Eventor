@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\hrith\\Desktop\\assignment\\Eventor\\eventor\\Eventor.csproj": {}
+    "C:\\Users\\hrith\\Desktop\\assignment\\eventor\\Eventor\\Eventor.csproj": {}
   },
   "projects": {
-    "C:\\Users\\hrith\\Desktop\\assignment\\Eventor\\eventor\\Eventor.csproj": {
+    "C:\\Users\\hrith\\Desktop\\assignment\\eventor\\Eventor\\Eventor.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\hrith\\Desktop\\assignment\\Eventor\\eventor\\Eventor.csproj",
+        "projectUniqueName": "C:\\Users\\hrith\\Desktop\\assignment\\eventor\\Eventor\\Eventor.csproj",
         "projectName": "Eventor",
-        "projectPath": "C:\\Users\\hrith\\Desktop\\assignment\\Eventor\\eventor\\Eventor.csproj",
+        "projectPath": "C:\\Users\\hrith\\Desktop\\assignment\\eventor\\Eventor\\Eventor.csproj",
         "packagesPath": "C:\\Users\\hrith\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\hrith\\Desktop\\assignment\\Eventor\\eventor\\obj\\",
+        "outputPath": "C:\\Users\\hrith\\Desktop\\assignment\\eventor\\Eventor\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\hrith\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -43,6 +43,10 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.6, )"
+            },
             "Microsoft.AspNetCore.Mvc.Core": {
               "target": "Package",
               "version": "[2.2.5, )"

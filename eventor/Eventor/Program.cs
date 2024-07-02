@@ -1,5 +1,6 @@
 using Eventor.Controllers;
 using Eventor.Database;
+using Eventor.Extensions;
 using Eventor.Helpers.UserHelperFunctions;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,15 +8,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
+builder.Services.AddApplicationServices(builder.Configuration);
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddDbContext<DataContext>(options => options.UseSqlite(@"DataSource=eventor.db;"));
-builder.Services.AddScoped<IAuthRepository, AuthRepository>();
-builder.Services.AddScoped<UserHelper>();
-var app = builder.Build();
 
+var app = builder.Build();
+app.UseAuthentication();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

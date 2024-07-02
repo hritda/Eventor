@@ -14,10 +14,12 @@ namespace Eventor.Controllers
   public class AuthRepository : IAuthRepository
   {
     private readonly DataContext _context;
+    private readonly IConfiguration _config;
     private readonly UserHelper _helper;
-    public AuthRepository(DataContext context, UserHelper helper)
+    public AuthRepository(DataContext context, UserHelper helper, IConfiguration config)
     {
       _context = context;
+      _config = config ;
       _helper = helper;
     }
     public LoginResponseDto Login(LoginDto loginDto)
@@ -33,7 +35,7 @@ namespace Eventor.Controllers
       
       if(user?.Password == loginDto.Password){
         loginResponse.Message ="logged in successfully";
-        loginResponse.Token = Guid.NewGuid().ToString();
+        loginResponse.Token = _helper.GenerateJSONWebToken(loginDto,_config);
         //loginDto.IsPasswordCorrect = true ;
 
       } else {
