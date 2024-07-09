@@ -21,6 +21,7 @@ namespace Eventor.Extensions
             
             services.AddDbContext<DataContext>(options => options.UseSqlite(@"DataSource=eventor.db;"));
             services.AddScoped<IAuthRepository, AuthRepository>();
+            services.AddScoped<IEventRepository,EventRepository>();
             services.AddScoped<UserHelper>();
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>

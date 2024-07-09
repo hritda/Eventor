@@ -7,7 +7,7 @@ namespace Eventor.Models
 {
     public class BaseModel
     {
-        public string uid{ get; set; }=Guid.NewGuid().ToString();
+        public string Uid{ get; set; }=Guid.NewGuid().ToString();
         public string? MadeBy
         { get; set; }
         public DateTime MadeOn { get; set; }=DateTime.Now;

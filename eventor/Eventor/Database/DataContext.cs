@@ -17,9 +17,14 @@ namespace Eventor.Database
         modelBuilder.Entity<User>()
             .HasMany(u => u.UserTypes)
             .WithMany(ut => ut.Users);
+
+        modelBuilder.Entity<Event>()
+        .HasOne(u=>u.OrganisedBy)
+        .WithMany().IsRequired();
            
     }
         public DbSet<User> Users { get; set; }
+        public DbSet<Event> Events {get;set;}
         public DbSet<UserType> UserTypes { get; set; }
     }
 }

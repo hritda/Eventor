@@ -3,6 +3,7 @@ using Eventor.Database;
 using Eventor.Extensions;
 using Eventor.Helpers.UserHelperFunctions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 
 var builder = WebApplication.CreateBuilder(args);
 
