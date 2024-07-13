@@ -14,8 +14,8 @@ namespace Eventor.Database
             // dbcontext.Users.Remove(last);
             // dbcontext.SaveChanges();
             // Console.WriteLine("last record deleted");
-            // dbcontext.Database.EnsureDeleted();
-            // dbcontext.Database.EnsureCreated();
+            //  dbcontext.Database.EnsureDeleted();
+            //  dbcontext.Database.EnsureCreated();
              if (dbcontext.Users.Any()) return;
 
             dbcontext.UserTypes.Add(new UserType
@@ -58,6 +58,7 @@ namespace Eventor.Database
                 StartTime = new TimeOnly(12, 49),
                 EndTime = new TimeOnly(13, 45),
                 EventType = "online",
+                EventName = "Mumbai Marathon"
 
             });
             dbcontext.SaveChanges();

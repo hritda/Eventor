@@ -23,6 +23,13 @@ namespace Eventor.Extensions
             services.AddScoped<IAuthRepository, AuthRepository>();
             services.AddScoped<IEventRepository,EventRepository>();
             services.AddScoped<UserHelper>();
+            services.AddCors(opt =>
+            {
+                opt.AddPolicy("CorsPolicy", policy =>
+                {
+                    policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+                });
+            });
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
             {

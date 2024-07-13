@@ -11,5 +11,7 @@ namespace Eventor.Controllers
     {
         UserEventListDto GetUserEvents(string userId);
         CreateEventConfirmDto CreateEvent(AddEventDto addEvent);
+        UpdateEventConfirmDto UpdateEvent(UpdateEventDto updateThisEvent);
+        BaseDto DeleteEvent(DeleteRequestDto deleteRequest);
     }
 }

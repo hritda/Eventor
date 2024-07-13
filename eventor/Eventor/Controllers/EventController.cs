@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Threading.Tasks;
 using Eventor.Dtos;
@@ -10,28 +11,56 @@ namespace Eventor.Controllers
 {
     public class EventController : BaseApiController
     {
-        private readonly IEventRepository _eventRepository ;
+        private readonly IEventRepository _eventRepository;
         public EventController(IEventRepository eventRepository)
         {
-            _eventRepository = eventRepository ;
+            _eventRepository = eventRepository;
         }
 
-        [HttpPost("{userId}/createEvent")]
-        public IActionResult CreateEvent([FromBody] AddEventDto addEventDto,string userId){
+        [HttpPost("users/{userId}")]
+        public IActionResult CreateEvent([FromBody] AddEventDto addEventDto, string userId)
+        {
             AddEventDto addEvent = addEventDto;
-            addEvent.OrganisedUserId = userId ;
+            addEvent.OrganisedUserId = userId;
             CreateEventConfirmDto createEventResp = _eventRepository.CreateEvent(addEvent);
-            if(createEventResp.StatusCode == 200){
+            if (createEventResp.StatusCode == 200)
+            {
                 return Ok(createEventResp);
             }
-            else 
-            return StatusCode(createEventResp.StatusCode,createEventResp.ErrorString);
+            else
+                return StatusCode(createEventResp.StatusCode, createEventResp);
         }
-        [HttpGet("{userId}")]
-        public IActionResult GetUserEvents(string userId){
-            UserEventListDto eventList = new UserEventListDto();
-            eventList = _eventRepository.GetUserEvents(userId);
+        [HttpGet("users/{userId}")]
+        public IActionResult GetUserEvents(string userId)
+        {
+            UserEventListDto eventList = _eventRepository.GetUserEvents(userId);
             return Ok(eventList);
+        }
+        [HttpDelete("users/{userId}/{eventId}")]
+        public IActionResult DeleteUserEvent(string userId,string eventId)
+        {
+            DeleteRequestDto deleteEvent = new DeleteRequestDto();
+            deleteEvent.UserId = userId;
+            deleteEvent.EventId = eventId;
+            BaseDto deleteConfirm = _eventRepository.DeleteEvent(deleteEvent);
+            if (deleteConfirm.StatusCode != 200)
+            {
+                return StatusCode(deleteConfirm.StatusCode, deleteConfirm);
+            }
+            return Ok(deleteConfirm);
+        }
+        [HttpPut("users/{userId}/{eventId}")]
+        public IActionResult UpdateUserEvent(UpdateEventDto updateEvent,string userId, string eventId){
+            UpdateEventDto updateThisEvent = updateEvent;
+            updateThisEvent.EventId = eventId;
+            updateThisEvent.OrganisedUserId = userId ;
+            UpdateEventConfirmDto updateEventResp = _eventRepository.UpdateEvent(updateThisEvent);
+             if (updateEventResp.StatusCode == 200)
+            {
+                return Ok(updateEventResp);
+            }
+            else
+                return StatusCode(updateEventResp.StatusCode,updateEventResp);
         }
 
 
