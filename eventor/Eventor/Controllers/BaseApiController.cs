@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Eventor.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/[controller]s")]
     public  class BaseApiController : ControllerBase
     {
         

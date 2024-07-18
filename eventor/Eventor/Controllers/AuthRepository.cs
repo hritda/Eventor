@@ -9,6 +9,7 @@ using Eventor.Database;
 using System.Runtime.InteropServices;
 using Eventor.Dtos;
 using Microsoft.AspNetCore.Mvc;
+using System.ComponentModel.DataAnnotations;
 namespace Eventor.Controllers
 {
   public class AuthRepository : IAuthRepository
@@ -33,9 +34,10 @@ namespace Eventor.Controllers
         loginResponse.StatusCode = 404;
 
       }
-
+      loginResponse.currUser = user ;
       if (user?.Password == loginDto.Password)
       {
+
         loginResponse.Message = "logged in successfully";
         loginResponse.Token = _helper.GenerateJSONWebToken(loginDto, _config);
         //loginDto.IsPasswordCorrect = true ;
@@ -77,9 +79,23 @@ namespace Eventor.Controllers
         Password = reguser.Password,
         UserTypes = utypes
       };
-      _context.Add(u);
-      _context.SaveChanges();
-      registerResponse.Message = "You have been registered successfully";
+      try
+      {
+        _context.Add(u);
+        _context.SaveChanges();
+        registerResponse.Message = "You have been registered successfully";
+      }
+      catch (ValidationException vex)
+      {
+        registerResponse.StatusCode = 400 ;
+        registerResponse.Message = vex.Message;
+      }
+      catch (Exception ex)
+      {
+        registerResponse.IsError = true ;
+        registerResponse.StatusCode = 500 ;
+        registerResponse.ErrorString = "Some error occurred in registering the user" ;
+      }
       return registerResponse;
     }
   }

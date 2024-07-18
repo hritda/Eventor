@@ -30,8 +30,8 @@ namespace Eventor.Extensions
                     policy.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
                 });
             });
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-            .AddJwtBearer(options =>
+            services.AddAuthentication("token")
+            .AddJwtBearer("token",options =>
             {
                 options.TokenValidationParameters = new TokenValidationParameters
                 {

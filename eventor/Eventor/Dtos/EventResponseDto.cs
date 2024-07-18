@@ -8,6 +8,7 @@ namespace Eventor.Dtos
     public class EventResponseDto
     {
         public string Venue { get; set; }
+        public string Uid {get;set;}
         public string Description { get; set; }
         public DateOnly StartDate { get; set; }
         public string EventName { get; set; }

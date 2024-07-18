@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Eventor.Dtos;
 using Eventor.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Eventor.Controllers
@@ -30,10 +32,22 @@ namespace Eventor.Controllers
             else
                 return StatusCode(createEventResp.StatusCode, createEventResp);
         }
+
+        [Authorize(AuthenticationSchemes ="token")]
         [HttpGet("users/{userId}")]
+      
         public IActionResult GetUserEvents(string userId)
-        {
-            UserEventListDto eventList = _eventRepository.GetUserEvents(userId);
+        {    Console.Write(HttpContext.Request.Headers.Authorization);
+             Console.Write("entered event controller");
+             var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+             UserEventListDto eventList = new UserEventListDto();
+             if(string.IsNullOrEmpty(email)){
+                eventList.IsError = true ;
+                eventList.ErrorString = "Invalid token";
+                eventList.StatusCode = 500 ;
+                return  StatusCode(eventList.StatusCode, eventList);
+             }
+             eventList = _eventRepository.GetUserEvents(userId);
             return Ok(eventList);
         }
         [HttpDelete("users/{userId}/{eventId}")]

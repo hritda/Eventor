@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Eventor.Database;
 using Eventor.Dtos;
 using Eventor.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
@@ -76,6 +77,7 @@ namespace Eventor.Controllers
             }
             catch (ValidationException ex)
             {
+                
                 createEventResp.Message = ex.Message;
             }
             catch (Exception ex)
@@ -86,15 +88,18 @@ namespace Eventor.Controllers
             }
             return createEventResp;
         }
+
+       
         public UserEventListDto GetUserEvents(string userId)
         {
+           
             List<Event> eventList = _context.Events.Include(e => e.OrganisedBy).Where(e => e.OrganisedBy.Uid == userId && e.DeleteFlag == 0).ToList();
             List<EventResponseDto> eventResponseList = new List<EventResponseDto>();
             UserEventListDto userEventList = new UserEventListDto();
             foreach (var eventItem in eventList)
             {
                 EventResponseDto eventResponse = new EventResponseDto
-                {
+                {   Uid = eventItem.Uid,
                     Venue = eventItem.Venue,
                     Description = eventItem.Description,
                     StartDate = eventItem.StartDate,
