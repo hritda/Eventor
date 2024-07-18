@@ -28,13 +28,13 @@ const EventCard:React.FC<Props> = ({ event }: Props) => {
         <CardText>{event.description}</CardText>
         <CardText>{event.eventType}</CardText>
       </CardBody>
-      <ListGroup flush>
-        <ListGroupItem>
+      <ListGroup flush >
+        <ListGroupItem className="mx-3">
           Starts From {event.startDate}, {event.startTime}
         </ListGroupItem>
-        <ListGroupItem>
+        <ListGroupItem className="mx-3">
           Ends on {event.endDate}, {event.endTime}
-        </ListGroupItem>
+        </ListGroupItem >
       </ListGroup>
 
       <CardBody>{event.venue}</CardBody>

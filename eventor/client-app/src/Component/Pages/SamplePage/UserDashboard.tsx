@@ -22,6 +22,16 @@ const UserDashboard = () => {
     if (token == null) {
       navigate("/login");
     }
+    if(currUser==null){
+      let requestOptions = {
+        method: "GET",
+        RequestMode:"no-cors",
+        headers : {
+          "Authorization": `Bearer ${token}`,
+        },
+      };
+    
+    }
     let requestOptions = {
       method: "GET",
       RequestMode:"no-cors",
