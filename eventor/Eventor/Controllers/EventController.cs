@@ -33,30 +33,42 @@ namespace Eventor.Controllers
                 return StatusCode(createEventResp.StatusCode, createEventResp);
         }
 
-        [Authorize(AuthenticationSchemes ="token")]
+        [Authorize(AuthenticationSchemes = "token")]
         [HttpGet("users/{userId}")]
-      
+
         public IActionResult GetUserEvents(string userId)
-        {    Console.Write(HttpContext.Request.Headers.Authorization);
-             Console.Write("entered event controller");
-             var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-             UserEventListDto eventList = new UserEventListDto();
-             if(string.IsNullOrEmpty(email)){
-                eventList.IsError = true ;
+        {
+            Console.Write(HttpContext.Request.Headers.Authorization);
+            Console.Write("entered event controller");
+            var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            UserEventListDto eventList = new UserEventListDto();
+            if (string.IsNullOrEmpty(email))
+            {
+                eventList.IsError = true;
                 eventList.ErrorString = "Invalid token";
-                eventList.StatusCode = 500 ;
-                return  StatusCode(eventList.StatusCode, eventList);
-             }
-             eventList = _eventRepository.GetUserEvents(userId);
+                eventList.StatusCode = 500;
+                return StatusCode(eventList.StatusCode, eventList);
+            }
+            eventList = _eventRepository.GetUserEvents(userId);
             return Ok(eventList);
         }
-        [HttpDelete("users/{userId}/{eventId}")]
-        public IActionResult DeleteUserEvent(string userId,string eventId)
-        {
+        [Authorize(AuthenticationSchemes = "token")]
+        [HttpDelete("{eventId}")]
+        public IActionResult DeleteUserEvent(string eventId)
+        {   Console.WriteLine("entered delte controller");
+            var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+            Console.WriteLine("delete controller email",email);
             DeleteRequestDto deleteEvent = new DeleteRequestDto();
-            deleteEvent.UserId = userId;
+            BaseDto deleteConfirm = new BaseDto();
+            if (string.IsNullOrEmpty(email))
+            {
+               deleteConfirm.IsError = true;
+                deleteConfirm.ErrorString = "Invalid token";
+                deleteConfirm.StatusCode = 500;
+                return StatusCode(deleteConfirm.StatusCode, deleteConfirm);
+            }
             deleteEvent.EventId = eventId;
-            BaseDto deleteConfirm = _eventRepository.DeleteEvent(deleteEvent);
+            deleteConfirm = _eventRepository.DeleteEvent(deleteEvent,email);
             if (deleteConfirm.StatusCode != 200)
             {
                 return StatusCode(deleteConfirm.StatusCode, deleteConfirm);
@@ -64,17 +76,18 @@ namespace Eventor.Controllers
             return Ok(deleteConfirm);
         }
         [HttpPut("users/{userId}/{eventId}")]
-        public IActionResult UpdateUserEvent(UpdateEventDto updateEvent,string userId, string eventId){
+        public IActionResult UpdateUserEvent(UpdateEventDto updateEvent, string userId, string eventId)
+        {
             UpdateEventDto updateThisEvent = updateEvent;
             updateThisEvent.EventId = eventId;
-            updateThisEvent.OrganisedUserId = userId ;
+            updateThisEvent.OrganisedUserId = userId;
             UpdateEventConfirmDto updateEventResp = _eventRepository.UpdateEvent(updateThisEvent);
-             if (updateEventResp.StatusCode == 200)
+            if (updateEventResp.StatusCode == 200)
             {
                 return Ok(updateEventResp);
             }
             else
-                return StatusCode(updateEventResp.StatusCode,updateEventResp);
+                return StatusCode(updateEventResp.StatusCode, updateEventResp);
         }
 
 

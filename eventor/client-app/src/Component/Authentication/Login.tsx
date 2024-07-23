@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
-import { Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
+import { Button, Col, Container, Form, FormGroup, Input, Label, Row } from "reactstrap";
 import { Btn, H2, H3, H4, Image, P } from "../../AbstractElements";
 import { dynamicImage } from "../../Service";
 import { useDispatch, useSelector } from "react-redux";
@@ -15,67 +15,76 @@ import {
   SignInAccount,
   SignInWith,
 } from "../../utils/Constant";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import SocialApp from "./SocialApp";
 import Swal from "sweetalert2";
 import { RootState } from "../../ReduxToolkit/Store";
 import { login } from "../../ReduxToolkit/Reducers/AuthSlice";
+import { useAuth } from "../Providers/AuthContext";
+import { IloginPayload } from "../../DefinedTypes/types";
 
 const Login = () => {
   const dispatch = useDispatch();
-  const currUser = useSelector((state:RootState) => state.auth.currUser);
+  const currUser = useSelector((state: RootState) => state.auth.currUser);
   const [show, setShow] = useState(false);
   const [email, setEmail] = useState("test123@gmail.com");
   const [password, setPassword] = useState("Test@123");
   const [passwordError, setPasswordError] = useState<boolean>(false);
   const navigate = useNavigate();
+  const { login, auth, isAuthenticated, token } = useAuth();
 
-  const SimpleLoginHandle = (event: React.FormEvent<HTMLFormElement>) => {
+  // useEffect(() => {
+  //   console.log("useeffect login authenticated:",isAuthenticated);
+  //   if (isAuthenticated) {
+  //     navigate("/users/dashboard");
+  //   }
+  // }, [isAuthenticated]);
+
+  const SimpleLoginHandle = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (password.length < 8) {
       setPasswordError(true);
       return;
     }
-    let payload = {
+    let payload: IloginPayload = {
       Email: email,
       Password: password,
       UserType: "1",
     };
 
-    let requestOptions = {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    };
-    fetch(`http://localhost:5110/api/auths/login`, requestOptions)
-      .then((response) => response.json())
-      .then((data) => {
-        if (data.statusCode != 200) {
-          Swal.fire({
-            title: "Error!",
-            text: `${data.message}`,
-            icon: "error",
-            confirmButtonText: "OK",
-          });
-        } else {
-          const payload = data.currUser ;
-          dispatch(login(payload));
-          localStorage.setItem("token",data.token);
+    const data = await login(payload,(error)=>{
+      console.log("return error message:",error);
+    },
+  (success)=>{
+    console.log("return success message",success);
+    navigate("/users/dashboard");
+    Swal.fire({
+      title: "Yay!",
+      text: "Logged in successfully",
+      icon: "success",
+      timer: 1300
+    });
+  }
+  );
+  // await new Promise(resolve => setTimeout(resolve, 0));
+  //   console.log(data);
+  //   console.log(isAuthenticated);
+ 
+  //     if (isAuthenticated) {
+     
+  //       navigate("/users/dashboard");
           
-          Swal.fire({
-            title: "Yay!",
-            text: "You are logged in!",
-            icon: "success",
-            showConfirmButton: false,
-            timer: 1300,
-          });
-          navigate("/users/dashboard");
-        }
-      })
-      .catch((error) => {});
+        Swal.fire({
+          title: "Yay!",
+          text: "Logged in successfully",
+          icon: "success",
+          timer: 1300
+        });
+  //     }
+   
+    
+
     // if (email === "test123@gmail.com" && password === "Test@123") {
     //   localStorage.setItem("login", JSON.stringify(true));
     //   navigate(`${process.env.PUBLIC_URL}/pages/sample_page`);
@@ -98,7 +107,6 @@ const Login = () => {
                   /> */}
                   <H2 className="for-light">Beevents</H2>
                   <H2 className="for-dark">Beevents</H2>
-                  
                 </Link>
               </div>
               <div className="login-main">
@@ -154,9 +162,9 @@ const Login = () => {
                       {ForgotPassword}
                     </Link>
                     <div className="text-end mt-3">
-                      <Btn color="primary" block className="w-100">
+                      <Button color="primary" type = "submit"  className="w-100">
                         {SignIn}
-                      </Btn>
+                      </Button>
                     </div>
                   </FormGroup>
                   <H4 className="text-muted mt-4 or">{SignInWith}</H4>

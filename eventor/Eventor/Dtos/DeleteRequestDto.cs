@@ -8,8 +8,7 @@ namespace Eventor.Dtos
 {
     public class DeleteRequestDto
     {
-        [Required]
-        public string UserId { get; set; }
+      
         [Required]
         public string EventId { get; set; }
     }

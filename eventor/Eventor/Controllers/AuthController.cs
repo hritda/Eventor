@@ -23,7 +23,8 @@ namespace Eventor.Controllers
             user.FirstName = "Hrithik";
             user.LastName = "Mistry";
             user.UserTypes?.Add(new UserType() { ChangeBy = "someone", ChangeOn = DateTime.Now, MadeBy = "someelse", MadeOn = DateTime.Now.AddMinutes(2) });
-            return Ok(user);
+            //return Ok(user);
+            return this.sendResponse(user,"success");
         }
 
         [HttpPost("login")]
@@ -32,7 +33,7 @@ namespace Eventor.Controllers
             
             loginResponse = _authRepository.Login(loginDto);
             if(loginResponse.StatusCode == 200){
-               return Ok(loginResponse) ;
+                return Ok(loginResponse);
             } else {
                 return BadRequest(loginResponse);
             }

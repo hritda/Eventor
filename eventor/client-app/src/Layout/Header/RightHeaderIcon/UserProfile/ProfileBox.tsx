@@ -5,14 +5,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../../ReduxToolkit/Store";
 import { logout } from "../../../../ReduxToolkit/Reducers/AuthSlice";
 import Swal from "sweetalert2";
+import { useAuth } from "../../../../Component/Providers/AuthContext";
 
 const ProfileBox = () => {
-  const dispatch = useDispatch();
-  const currUser = useSelector((state:RootState) => state.auth.currUser);
+  const {logout} = useAuth();
   const handleClick = (name:string)=>{
     if(name === "Log Out"){
-      dispatch(logout());
-      localStorage.removeItem("token");
+      logout();
       Swal.fire(
         {
           title: 'Logged out',

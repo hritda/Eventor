@@ -11,45 +11,38 @@ import EventCard from "../../EventCards/EventCard";
 import { IEvent } from "../../../DefinedTypes/types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../ReduxToolkit/Store";
+import { useAuth } from "../../Providers/AuthContext";
 
 const UserDashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const currUser = useSelector((state:RootState) => state.auth.currUser);
+  const currUser = useSelector((state: RootState) => state.auth.currUser);
+  const { auth } = useAuth();
+  console.log("dashboard auth :", auth);
   const [events, setEvents] = useState<IEvent[]>([]);
   useEffect(() => {
     let token = localStorage.getItem("token");
     if (token == null) {
       navigate("/login");
     }
-    if(currUser==null){
-      let requestOptions = {
-        method: "GET",
-        RequestMode:"no-cors",
-        headers : {
-          "Authorization": `Bearer ${token}`,
-        },
-      };
-    
-    }
     let requestOptions = {
       method: "GET",
-      RequestMode:"no-cors",
-      headers : {
-        "Authorization": `Bearer ${token}`,
+      RequestMode: "no-cors",
+      headers: {
+        Authorization: `Bearer ${token}`,
       },
     };
 
-    fetch(`http://localhost:5110/api/events/users/${currUser?.uid}`, requestOptions)
+    fetch(`http://localhost:5110/api/events/users/${auth?.uid}`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
         if (data.statusCode !== 200) {
-            Swal.fire({
-                title: "OOPS!",
-                text: "some error occurred fetching events",
-                icon: "error",
-                confirmButtonText: "OK",
-              });
+          Swal.fire({
+            title: "OOPS!",
+            text: "some error occurred fetching events",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
         } else {
           const evenList = data.userEventList;
           setEvents(evenList);
@@ -57,25 +50,23 @@ const UserDashboard = () => {
       })
       .catch((error) => {
         Swal.fire({
-            title: "OOPS!",
-            text: "Some error occurred in fetching events",
-            icon: "error",
-            confirmButtonText: "OK",
-          });
+          title: "OOPS!",
+          text: "Some error occurred in fetching events",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
       });
-  }, []);
+  }, [auth]);
 
   return (
     <Container className="d-flex flex-column">
       <h2 className="my-5 mx-auto">Your events</h2>
       <Container fluid>
         <Row>
-      {
-        events.map((e)=>(
-             <EventCard event={e} key = {e.uid} />
-         ))
-      }
-      </Row>
+          {events.map((e) => (
+            <EventCard event={e} key={e.uid} />
+          ))}
+        </Row>
       </Container>
     </Container>
   );

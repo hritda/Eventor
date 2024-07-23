@@ -3,13 +3,18 @@ import HeaderLogo from "./HeaderLogo";
 import SearchInput from "./SearchInput/SearchInput";
 import { useAppSelector } from "../../ReduxToolkit/Hooks";
 import RightHeaderIcon from "./RightHeaderIcon/RightHeaderIcon";
+import { Btn } from "../../AbstractElements";
 
 const Header = () => {
-  const { toggleSidebar,scroll } = useAppSelector((state) => state.layout);
+  const { toggleSidebar, scroll } = useAppSelector((state) => state.layout);
   return (
-    <Row className={`header-wrapper m-0 ${toggleSidebar ? "close_icon" : ""}`} style={{display: scroll ? "none" : ""}}>
+    <Row
+      className={`header-wrapper m-0 ${toggleSidebar ? "close_icon" : ""}`}
+      style={{ display: scroll ? "none" : "" }}
+    >
       <HeaderLogo />
       <SearchInput />
+
       <RightHeaderIcon />
     </Row>
   );

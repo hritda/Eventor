@@ -3,13 +3,15 @@ import LayoutSlice from "./Reducers/LayoutSlice";
 import BookmarkHeaderSlice from "./Reducers/BookmarkHeaderSlice";
 import ThemeCustomizerSlice from "./Reducers/ThemeCustomizerSlice";
 import AuthSlice from "./Reducers/AuthSlice";
+import UiSlice from "./Reducers/UiSlice";
 
 const Store = configureStore({
   reducer: {
     layout: LayoutSlice,
-    bookmarkHeader:BookmarkHeaderSlice,
+    bookmarkHeader: BookmarkHeaderSlice,
     themeCustomizer: ThemeCustomizerSlice,
     auth: AuthSlice,
+    ui: UiSlice,
   },
 });
 

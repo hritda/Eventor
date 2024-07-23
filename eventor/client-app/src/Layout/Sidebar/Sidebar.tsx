@@ -37,7 +37,7 @@ const Sidebar = () => {
                     <H6>{Pinned}</H6>
                   </div>
                 </LI>
-              <SidebarMenuList />
+              {/* <SidebarMenuList /> */}
               </SimpleBar>
             </UL> 
           </div>

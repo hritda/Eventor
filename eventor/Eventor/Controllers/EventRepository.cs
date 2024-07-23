@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Eventor.Database;
 using Eventor.Dtos;
+using Eventor.Helpers.UserHelperFunctions;
 using Eventor.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -15,9 +16,11 @@ namespace Eventor.Controllers
     public class EventRepository : IEventRepository
     {
         private readonly DataContext _context;
-        public EventRepository(DataContext context)
+         private readonly UserHelper _helper;
+        public EventRepository(DataContext context, UserHelper helper)
         {
             _context = context;
+            _helper = helper ;
         }
         public void ValidateEvent(Event e)
         {
@@ -121,7 +124,7 @@ namespace Eventor.Controllers
             return userEventList;
         }
 
-        public BaseDto DeleteEvent(DeleteRequestDto deleteRequest)
+        public BaseDto DeleteEvent(DeleteRequestDto deleteRequest,string email)
         {
             BaseDto deleteConfirm = new BaseDto();
             Event eventToDelete = new Event();
@@ -129,10 +132,10 @@ namespace Eventor.Controllers
             // Console.WriteLine(deleteRequest.EventId);
             // Console.WriteLine(deleteRequest.UserId);
             eventToDelete = _context.Events.Include(e => e.OrganisedBy).FirstOrDefault(e => e.Uid == deleteRequest.EventId);
-
+            User user = _helper.IsUserExistByEmail(email);
             // Console.WriteLine(eventToDelete.OrganisedBy == null);
             // Console.WriteLine(eventToDelete.OrganisedBy);
-            if (eventToDelete.OrganisedBy.Uid != deleteRequest.UserId)
+            if (eventToDelete.OrganisedBy.Uid != user.Uid)
             {
                 deleteConfirm.StatusCode = 401;
                 deleteConfirm.Message = "You are not allowed to delete this event";

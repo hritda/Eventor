@@ -1,5 +1,5 @@
 import { FormEvent, useState } from "react";
-import { Btn, H4, H6, P } from "../../../src/AbstractElements";
+import { Btn, H2, H4, H6, P } from "../../../src/AbstractElements";
 import { Col, Form, FormGroup, Input, Label, Row } from "reactstrap";
 import "../Authentication/authStyle.css";
 import Swal from "sweetalert2";
@@ -132,7 +132,8 @@ const SignUpAccount = () => {
   return (
     <div className="login-card login-dark">
       <div>
-        <div>Eventor</div>
+      <H2 className="for-light">Beevents</H2>
+      <H2 className="for-dark">Beevents</H2>
         <div className="login-main">
           <Form className="theme-form" onSubmit={handleSubmit}>
             <H4>{CreateYourAccount}</H4>

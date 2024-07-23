@@ -7,7 +7,7 @@ const LayoutRoutes = () => {
     <Routes>
       {routes.map(({ path, Component }, i) => (
         <Route element={<Layout />} key={i}>
-          <Route path={path} element={Component}/>
+          <Route path={path} element={Component} />
         </Route>
       ))}
     </Routes>
