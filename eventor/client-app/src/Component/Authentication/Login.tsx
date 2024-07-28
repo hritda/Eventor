@@ -58,7 +58,7 @@ const Login = () => {
     },
   (success)=>{
     console.log("return success message",success);
-    navigate("/users/dashboard");
+    navigate("/users/mainDashboard");
     Swal.fire({
       title: "Yay!",
       text: "Logged in successfully",

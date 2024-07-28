@@ -60,20 +60,21 @@ export const profilesMessage:profilesMessageType[] = [
         link: `${process.env.PUBLIC_URL}/chat/privatechat  `
     },
     {
-        name: "Inbox",
-        icon:"Mail",
-        link: `${process.env.PUBLIC_URL}/email/letterbox`
-    },
-    {
-        name: "Taskboard",
+        name: "Your events",
         icon:"FileText",
-        link:`${process.env.PUBLIC_URL}/app/task`
+        link: `${process.env.PUBLIC_URL}/users/dashboard`
     },
-    {
-        name: "Settings",
-        icon:"Settings",
-        link: `${process.env.PUBLIC_URL}/users/useredit`
-    },
+    // {
+    //     name: "Inbox",
+    //     icon:"Mail",
+    //     link: `${process.env.PUBLIC_URL}/email/letterbox`
+    // },
+   
+    // {
+    //     name: "Settings",
+    //     icon:"Settings",
+    //     link: `${process.env.PUBLIC_URL}/users/useredit`
+    // },
     {
         name: "Log Out",
         icon:"LogOut",

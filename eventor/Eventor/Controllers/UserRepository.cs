@@ -11,26 +11,33 @@ namespace Eventor.Controllers
 {
     public class UserRepository : IUserRepository
     {
-         private readonly DataContext _context;
-          private readonly UserHelper _helper;
+        private readonly DataContext _context;
+        private readonly UserHelper _helper;
 
-           public UserRepository(DataContext context, UserHelper helper)
+        public UserRepository(DataContext context, UserHelper helper)
         {
             _context = context;
             _helper = helper;
         }
-        public UserResponseDto GetUser(string email){
-            User user = _helper.IsUserExistByEmail(email);
-            UserResponseDto userResponse  = new UserResponseDto();
-            if(user==null){
-                userResponse.userData = null ;
-               userResponse.Message = "user doesnt exist";
-               return userResponse ;
-            }
-            userResponse.userData = user;
-            return userResponse ;
-        }
-           
+
         
+        public ResponseDto<UserResponseDto> GetUser(string email)
+        {
+            User user = _helper.IsUserExistByEmail(email);
+            FailDto<UserResponseDto> getUserFail = new FailDto<UserResponseDto>();
+            SuccessDto<UserResponseDto> getUserSuccess = new SuccessDto<UserResponseDto>();
+            UserResponseDto userResponse = new UserResponseDto();
+            if (user == null)
+            {
+                getUserFail.message = "User doesnt exist";
+                getUserFail.status = 401;
+                return getUserFail;
+            }
+            userResponse.userData = user ;
+            getUserSuccess.data = userResponse ;
+            return getUserSuccess ;
+        }
+
+
     }
 }

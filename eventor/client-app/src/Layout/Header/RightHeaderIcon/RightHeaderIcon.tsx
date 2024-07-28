@@ -30,7 +30,7 @@ const RightHeaderIcon = () => {
         {/* <Language />
         <Notifications />
         <HeaderBookmark /> */}
-        <DarkMode />
+        {/* <DarkMode /> */}
         {/* <HeaderMessage />
         <HeaderCart /> */}
         <UserProfile />

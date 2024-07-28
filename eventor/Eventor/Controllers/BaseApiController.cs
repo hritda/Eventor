@@ -19,12 +19,12 @@ namespace Eventor.Controllers
       s.message = message;
       return Ok(s);
     }
-    protected IActionResult sendError<T>(string message, ErrorsDto<T>? errors = null)
+    protected IActionResult sendError<T>(FailDto<T>? errors = null)
     {
-      ErrorDto<T> e = new ErrorDto<T>();
-      e.errors = errors;
-      e.message = message;
-     return StatusCode(400, e);
+      // FailDto<T> e = new FailDto<T>();
+      // e.Errors = errors?.Errors;
+      // e.message = message;
+     return StatusCode(errors.status, errors);
     }
 
   }

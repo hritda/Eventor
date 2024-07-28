@@ -27,7 +27,7 @@ const RouterData = () => {
           <Route
             path={`${process.env.PUBLIC_URL}` || "/"}
             element={
-              <Navigate to={`${process.env.PUBLIC_URL}/users/dashboard`} />
+              <Navigate to={`${process.env.PUBLIC_URL}/users/mainDashboard`} />
             }
           />
           </>

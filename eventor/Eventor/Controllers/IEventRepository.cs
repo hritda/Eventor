@@ -9,9 +9,10 @@ namespace Eventor.Controllers
 {
     public interface IEventRepository
     {
-        UserEventListDto GetUserEvents(string userId);
-        CreateEventConfirmDto CreateEvent(AddEventDto addEvent);
-        UpdateEventConfirmDto UpdateEvent(UpdateEventDto updateThisEvent);
-        BaseDto DeleteEvent(DeleteRequestDto deleteRequest, string email);
+        ResponseDto<UserEventListDto> GetUserEvents(string email);
+        ResponseDto<CreateEventConfirmDto> CreateEvent(AddEventDto addEvent);
+        ResponseDto<UpdateEventConfirmDto> UpdateEvent(UpdateEventDto updateThisEvent);
+        ResponseDto<BaseDto> DeleteEvent(DeleteRequestDto deleteRequest, string email);
+        ResponseDto<EventDto> EventById(string eventUid);
     }
 }

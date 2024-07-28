@@ -13,6 +13,7 @@ const Header = () => {
       style={{ display: scroll ? "none" : "" }}
     >
       <HeaderLogo />
+
       <SearchInput />
 
       <RightHeaderIcon />

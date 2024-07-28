@@ -9,6 +9,6 @@ namespace Eventor.Controllers
 {
     public interface IUserRepository
     {
-        UserResponseDto GetUser(string email);
+        ResponseDto<UserResponseDto> GetUser(string email);
     }
 }

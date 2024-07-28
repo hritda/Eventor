@@ -12,19 +12,36 @@ import { IEvent } from "../../../DefinedTypes/types";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../../ReduxToolkit/Store";
 import { useAuth } from "../../Providers/AuthContext";
+import useUI from "../../../ReduxToolkit/Hooks/useUi";
+import { stopCoverage } from "v8";
+import { stopRefetch } from "../../../ReduxToolkit/Reducers/UiSlice";
 
 const UserDashboard = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currUser = useSelector((state: RootState) => state.auth.currUser);
   const { auth } = useAuth();
+  const { refetch } = useUI();
   console.log("dashboard auth :", auth);
   const [events, setEvents] = useState<IEvent[]>([]);
+ 
   useEffect(() => {
     let token = localStorage.getItem("token");
     if (token == null) {
       navigate("/login");
     }
+    getEventList();
+  },[]);
+
+  useEffect(() => {
+    if(refetch.includes("EventList")){
+      getEventList();
+    }
+    
+  }, [refetch]);
+
+  const getEventList = () => {
+    let token = localStorage.getItem("token");
     let requestOptions = {
       method: "GET",
       RequestMode: "no-cors",
@@ -32,11 +49,11 @@ const UserDashboard = () => {
         Authorization: `Bearer ${token}`,
       },
     };
-
-    fetch(`http://localhost:5110/api/events/users/${auth?.uid}`, requestOptions)
+    
+    fetch(`http://localhost:5110/api/events`, requestOptions)
       .then((response) => response.json())
       .then((data) => {
-        if (data.statusCode !== 200) {
+        if (data.status !== 200) {
           Swal.fire({
             title: "OOPS!",
             text: "some error occurred fetching events",
@@ -44,8 +61,9 @@ const UserDashboard = () => {
             confirmButtonText: "OK",
           });
         } else {
-          const evenList = data.userEventList;
+          const evenList = data.data.userEventList;
           setEvents(evenList);
+          dispatch(stopRefetch("EventList"));
         }
       })
       .catch((error) => {
@@ -56,9 +74,9 @@ const UserDashboard = () => {
           confirmButtonText: "OK",
         });
       });
-  }, [auth]);
-
+  };
   return (
+    <div className='page-body'>
     <Container className="d-flex flex-column">
       <h2 className="my-5 mx-auto">Your events</h2>
       <Container fluid>
@@ -69,6 +87,8 @@ const UserDashboard = () => {
         </Row>
       </Container>
     </Container>
+    </div>
+  
   );
 };
 

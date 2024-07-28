@@ -10,6 +10,7 @@ using System.Runtime.InteropServices;
 using Eventor.Dtos;
 using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
+using Microsoft.Win32;
 namespace Eventor.Controllers
 {
   public class AuthRepository : IAuthRepository
@@ -23,45 +24,73 @@ namespace Eventor.Controllers
       _config = config;
       _helper = helper;
     }
-    public LoginResponseDto Login(LoginDto loginDto)
+    public ResponseDto<LoginResponseDto> Login(LoginDto loginDto)
     {
-      var loginResponse = new LoginResponseDto();
+      LoginResponseDto loginResponse = new LoginResponseDto();
       Console.WriteLine($"UserType:{loginDto.UserType}");
       User user = _helper.IsUserExistByEmail(loginDto?.Email);
       if (user == null)
       {
-        loginResponse.Message = "User doesnt exist, please register";
-        loginResponse.StatusCode = 404;
 
+                var failresponse = new FailDto<LoginResponseDto>
+                {
+                    data = null,
+                    message = "USER DOESNT exist",
+                    Errors = new List<Error>(),
+                    status = 400
+                };
+                failresponse.Errors.Add(new Error()
+        {
+          ErrorMessage = "user doesnt exist",
+          PropertyName = "User"
+        });
+        return failresponse;
       }
-      loginResponse.currUser = user ;
+      loginResponse.currUser = user;
       if (user?.Password == loginDto.Password)
       {
 
-        loginResponse.Message = "logged in successfully";
+        
         loginResponse.Token = _helper.GenerateJSONWebToken(loginDto, _config);
         //loginDto.IsPasswordCorrect = true ;
 
+        var successResponse = new SuccessDto<LoginResponseDto>();
+        
+        successResponse.message = "logged in successfully";
+        successResponse.data = loginResponse ;
+      
+        return successResponse;
       }
       else
       {
 
-        loginResponse.Message = "invalid credentials";
-        loginResponse.StatusCode = 404;
+        var failresponse = new FailDto<LoginResponseDto>();
+        failresponse.data = null;
+        failresponse.message = "invalid credentials";
+        failresponse.status = 401 ;
+        failresponse.Errors = new List<Error>();
+        failresponse.Errors.Add(new Error()
+        {
+          ErrorMessage = "invalid credentials",
+          PropertyName = "credentials"
+        });
+        return failresponse;
 
       }
-
-      return loginResponse;
     }
-    public RegisterResponseDto Register(RegisterDto reguser)
+    public ResponseDto<RegisterResponseDto> Register(RegisterDto reguser)
     {
       var registerResponse = new RegisterResponseDto();
       User user = _helper.IsUserExistByEmail(reguser.Email);
+      ResponseDto<RegisterResponseDto> registerSuccess = new SuccessDto<RegisterResponseDto>();
+       ResponseDto<RegisterResponseDto> registerFail = new FailDto<RegisterResponseDto>();
       if (user != null)
       {
-        registerResponse.StatusCode = 400;
-        registerResponse.Message = "User already exists, please login with email";
-        return registerResponse;
+        
+         registerFail.data = null ;
+         registerFail.status = 400;
+         registerFail.message = "User already exists, please login with email";
+        return registerFail;
       }
       //get the list of usertype objects based on code
       List<string> utypeCodes = reguser.UserTypeCodes;
@@ -83,20 +112,21 @@ namespace Eventor.Controllers
       {
         _context.Add(u);
         _context.SaveChanges();
-        registerResponse.Message = "You have been registered successfully";
+         registerSuccess.message = "You have been registered successfully";
+         return registerSuccess ;
       }
       catch (ValidationException vex)
       {
-        registerResponse.StatusCode = 400 ;
-        registerResponse.Message = vex.Message;
+        registerFail.status = 401;
+        registerFail.message = vex.Message;
+
       }
       catch (Exception ex)
       {
-        registerResponse.IsError = true ;
-        registerResponse.StatusCode = 500 ;
-        registerResponse.ErrorString = "Some error occurred in registering the user" ;
+         registerFail.status = 400;
+        registerFail.message = ex.Message;
       }
-      return registerResponse;
+      return registerFail ;
     }
   }
 }

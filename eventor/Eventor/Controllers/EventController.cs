@@ -24,70 +24,91 @@ namespace Eventor.Controllers
         {
             AddEventDto addEvent = addEventDto;
             addEvent.OrganisedUserId = userId;
-            CreateEventConfirmDto createEventResp = _eventRepository.CreateEvent(addEvent);
-            if (createEventResp.StatusCode == 200)
+            var createEventResp = _eventRepository.CreateEvent(addEvent);
+
+            if (createEventResp.GetType() == typeof(SuccessDto<CreateEventConfirmDto>))
             {
-                return Ok(createEventResp);
+                return sendResponse<CreateEventConfirmDto>(createEventResp.data, createEventResp.message);
             }
             else
-                return StatusCode(createEventResp.StatusCode, createEventResp);
+            {
+                return sendError<CreateEventConfirmDto>((FailDto<CreateEventConfirmDto>)createEventResp);
+            }
+
+        }
+        [Authorize(AuthenticationSchemes = "token")]
+        [HttpGet("{eventUid}")]
+        public IActionResult GetEventByUid(string eventUid){
+         
+             var eventResp = _eventRepository.EventById(eventUid);
+             if(eventResp.GetType() == typeof(FailDto<EventDto>)){
+                return sendError<EventDto>((FailDto<EventDto>)eventResp);
+             }
+                return sendResponse<EventDto>(eventResp.data,"event receieved successfully");
         }
 
         [Authorize(AuthenticationSchemes = "token")]
-        [HttpGet("users/{userId}")]
+        [HttpGet("")]
 
-        public IActionResult GetUserEvents(string userId)
+        public IActionResult GetUserEvents()
         {
             Console.Write(HttpContext.Request.Headers.Authorization);
             Console.Write("entered event controller");
             var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             UserEventListDto eventList = new UserEventListDto();
+            FailDto<UserEventListDto> eventListFail = new FailDto<UserEventListDto>();
             if (string.IsNullOrEmpty(email))
-            {
-                eventList.IsError = true;
-                eventList.ErrorString = "Invalid token";
-                eventList.StatusCode = 500;
-                return StatusCode(eventList.StatusCode, eventList);
+            {   
+                eventListFail.message = "Invalid token";
+                eventListFail.status = 401;
+                
+                return sendError<UserEventListDto>(eventListFail);
             }
-            eventList = _eventRepository.GetUserEvents(userId);
-            return Ok(eventList);
+            var eventListSuccess  = _eventRepository.GetUserEvents(email);
+            return sendResponse<UserEventListDto>(eventListSuccess.data,eventListSuccess.message);
         }
         [Authorize(AuthenticationSchemes = "token")]
         [HttpDelete("{eventId}")]
         public IActionResult DeleteUserEvent(string eventId)
-        {   Console.WriteLine("entered delte controller");
+        {
+            Console.WriteLine("entered delete controller");
             var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
-            Console.WriteLine("delete controller email",email);
+            Console.WriteLine("delete controller email", email);
             DeleteRequestDto deleteEvent = new DeleteRequestDto();
-            BaseDto deleteConfirm = new BaseDto();
+           
+            FailDto<BaseDto> deleteFailed = new FailDto<BaseDto>();
+    
             if (string.IsNullOrEmpty(email))
             {
-               deleteConfirm.IsError = true;
-                deleteConfirm.ErrorString = "Invalid token";
-                deleteConfirm.StatusCode = 500;
-                return StatusCode(deleteConfirm.StatusCode, deleteConfirm);
+                deleteFailed.Errors = null ;
+                deleteFailed.message = "Invalid token";
+                
+                deleteFailed.status = 500;
+                return sendError<BaseDto>(deleteFailed);
             }
             deleteEvent.EventId = eventId;
-            deleteConfirm = _eventRepository.DeleteEvent(deleteEvent,email);
-            if (deleteConfirm.StatusCode != 200)
+             var deleteResponse = _eventRepository.DeleteEvent(deleteEvent, email);
+            if (deleteResponse.GetType() == typeof(FailDto<BaseDto>))
             {
-                return StatusCode(deleteConfirm.StatusCode, deleteConfirm);
+                return sendError<BaseDto>((FailDto<BaseDto>)deleteResponse);
             }
-            return Ok(deleteConfirm);
+            else 
+            return sendResponse<BaseDto>(deleteResponse.data, deleteResponse.message);
         }
+
         [HttpPut("users/{userId}/{eventId}")]
         public IActionResult UpdateUserEvent(UpdateEventDto updateEvent, string userId, string eventId)
         {
             UpdateEventDto updateThisEvent = updateEvent;
             updateThisEvent.EventId = eventId;
             updateThisEvent.OrganisedUserId = userId;
-            UpdateEventConfirmDto updateEventResp = _eventRepository.UpdateEvent(updateThisEvent);
-            if (updateEventResp.StatusCode == 200)
+            var updateEventResp = _eventRepository.UpdateEvent(updateThisEvent);
+            if (updateEventResp.GetType() == typeof(SuccessDto<UpdateEventConfirmDto>))
             {
-                return Ok(updateEventResp);
+                return sendResponse<UpdateEventConfirmDto>(updateEventResp.data, updateEventResp.message);
             }
             else
-                return StatusCode(updateEventResp.StatusCode, updateEventResp);
+                return sendError<UpdateEventConfirmDto>((FailDto<UpdateEventConfirmDto>)updateEventResp);
         }
 
 

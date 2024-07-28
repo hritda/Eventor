@@ -44,6 +44,6 @@ const UiSlice = createSlice({
   },
 });
 
-export const { setLoading, openModal, closeModal, closeAllModals } =
+export const { setLoading, openModal, closeModal, closeAllModals, startRefetch, stopRefetch } =
   UiSlice.actions;
 export default UiSlice.reducer;

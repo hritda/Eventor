@@ -24,30 +24,44 @@ namespace Eventor.Controllers
             user.LastName = "Mistry";
             user.UserTypes?.Add(new UserType() { ChangeBy = "someone", ChangeOn = DateTime.Now, MadeBy = "someelse", MadeOn = DateTime.Now.AddMinutes(2) });
             //return Ok(user);
-            return this.sendResponse(user,"success");
+            return this.sendResponse(user, "success");
         }
 
         [HttpPost("login")]
         public IActionResult LoginUser([FromBody] LoginDto loginDto)
-        {  LoginResponseDto loginResponse = new LoginResponseDto();
-            
-            loginResponse = _authRepository.Login(loginDto);
-            if(loginResponse.StatusCode == 200){
-                return Ok(loginResponse);
-            } else {
-                return BadRequest(loginResponse);
+        {
+          
+
+            var responseDto = _authRepository.Login(loginDto);
+            if (responseDto.GetType() == typeof(FailDto<LoginResponseDto>))
+            {
+                FailDto<LoginResponseDto> failresp = (FailDto<LoginResponseDto>)responseDto ;
+                return sendError<LoginResponseDto>(failresp);
+
             }
-            
+            else
+            {
+               
+                
+                return sendResponse<LoginResponseDto>(responseDto?.data,"success login") ;
+            }
+
         }
 
         [HttpPost("register")]
-        public IActionResult RegisterUser([FromBody] RegisterDto user){
-            var registerResponse = new RegisterResponseDto();
-            registerResponse = _authRepository.Register(user);
+        public IActionResult RegisterUser([FromBody] RegisterDto user)
+        {
+           
+            var registerResponse = _authRepository.Register(user);
 
-            if(registerResponse.StatusCode == 200){
-                return Ok(registerResponse);
-            } else return BadRequest(registerResponse);
-        } 
+          if (registerResponse.GetType() == typeof(SuccessDto<RegisterResponseDto>))
+            {
+
+                return Ok(sendResponse<RegisterResponseDto>(registerResponse?.data,"invalid credentials"));
+
+            }
+            return sendError<RegisterResponseDto>((FailDto<RegisterResponseDto>)registerResponse);
+
+        }
     }
 }

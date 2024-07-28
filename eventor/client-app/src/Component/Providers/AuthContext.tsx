@@ -58,8 +58,9 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
         fetch(`${BASE_URL}${API_ROUTES.GET_USER}`, requestOptions)
         .then((response) => response.json())
         .then((data) => {
-          setAuth(data.userData);
-          console.log("AUTH user data:", data.userData);
+          setAuth(data.data.userData);
+          setTokenState(token);
+          console.log("AUTH user data:", data.data.userData);
         });
         return ;
       } catch (error) {
@@ -68,7 +69,7 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
       }
      
     }
-  }, [tokenState, isAuthenticated]);
+  },[tokenState, isAuthenticated]);
 
   const login = async (loginPayload: IloginPayload,
     onError?: (message: string) => void,
@@ -85,31 +86,31 @@ const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
     try {
       fetch(`${BASE_URL}${API_ROUTES.LOGIN}`, requestOptions)
         .then((response) => response.json())
-        .then((data) => {
-          console.log("login response data:",data);
-          if (data.statusCode == 200) {
-            localStorage.setItem("token",data.token);
-            setAuth(data.currUser);
+        .then((respData) => {
+          console.log("login response data:",respData.data);
+          if (respData.status == 200) {
+            localStorage.setItem("token",respData.data.token);
+            setAuth(respData.data.currUser);
             setIsAuthenticated(true);
-            setTokenState(data.token);
-            console.log("AUTH user DATA login:", data.currUser);
+            setTokenState(respData.data.token);
+            console.log("AUTH user DATA login:", respData.data.currUser);
         
             if(onSuccess){
-              return onSuccess(data.message);
+              return onSuccess(respData.message);
             }
             
           } else {
             Swal.fire({
                 title: "OOPS!",
-                text: `${data.message}`,
+                text: `${respData.message}`,
                 icon: "warning",
                 confirmButtonText: "OK",
               });
              if(onError){
-              return onError(data.message);
+              return onError(respData.message);
              }
           }
-          return data.message ;
+          return respData.message ;
         });
     } catch (error) {
       console.error("Login error", error);

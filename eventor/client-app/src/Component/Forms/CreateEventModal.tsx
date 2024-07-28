@@ -3,9 +3,9 @@ import CommonModal from "../../Data/Ui-Kits/Modal/CommonModal";
 import { Btn, H4, Image, LI, P, UL } from "../../AbstractElements";
 import { dynamicImage } from "../../Service";
 import useUI from "../../ReduxToolkit/Hooks/useUi";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { API_ROUTES,BASE_URL } from "../../Routes/apiRoutes";
-import { closeModal, openModal } from "../../ReduxToolkit/Reducers/UiSlice";
+import { closeModal, openModal, startRefetch } from "../../ReduxToolkit/Reducers/UiSlice";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import { FormErrors, FormValues } from "../../DefinedTypes/types";
 import { useAuth } from "../Providers/AuthContext";
@@ -22,12 +22,14 @@ import {
 import { AiFillCloseSquare } from "react-icons/ai";
 import { error } from "console";
 import Swal from "sweetalert2";
+import { useEffect } from "react";
 interface CreateEventModalProps {}
 const CreateEventModal: React.FC<CreateEventModalProps> = ({}) => {
   const ModalName = "CreateEvent";
-  const { modalType } = useUI();
+  const { modalType} = useUI();
   const {auth,token} = useAuth();
   const dispatch = useDispatch();
+
   const initialEventValues: FormValues = {
     eventName: "",
     description: "",
@@ -38,6 +40,8 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({}) => {
     venue: "",
     eventType: "",
   };
+ 
+  
   const validate = (values: FormValues): FormErrors => {
     console.log("entered validation form");
     const errors: FormErrors = {};
@@ -113,13 +117,15 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({}) => {
     fetch(`${BASE_URL}${API_ROUTES.CREATE_EVENT}${userId}`, requestOptions)
     .then((response)=>response.json())
     .then((data)=>{
-      if(data.statusCode == 200){
+      if(data.status == 200){
         console.log("event created",data);
+        dispatch(startRefetch("EventList"));
         Swal.fire({
           title: "Yay!",
           text: `${data.message}`,
           icon: "success",
-          timer: 1300
+          timer: 1000,
+          showConfirmButton:false
         });
       } else {
         console.log("event creation failed", data);

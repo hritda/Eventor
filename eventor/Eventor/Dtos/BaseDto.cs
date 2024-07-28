@@ -8,20 +8,24 @@ namespace Eventor.Dtos
 {
     public class BaseDto
     {
-        public int StatusCode { get; set; } = 200;
-        public string Message { get; set; } = "";
-
-        public bool IsError { get; set; } = false;
-        public string ErrorString { get; set; } = "";
     }
-    public class SuccessDto<T>
+    public class ResponseDto<T>
     {
-        public bool status { get; set; } = true;
+        public int status { get; set; } = 200;
         public string message { get; set; } = "";
 
         public T? data { get; set; }
 
     }
+    public class SuccessDto<T> : ResponseDto<T>
+    {
+
+    }
+    public class FailDto<T> : ResponseDto<T>
+    {
+        public List<Error> Errors { get; set; }
+    }
+    
     public class ErrorsDto<T>
     {
         public List<Error> Errors { get; set; }

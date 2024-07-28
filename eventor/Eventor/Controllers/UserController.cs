@@ -20,18 +20,22 @@ namespace Eventor.Controllers
       }
 
        [Authorize(AuthenticationSchemes ="token")]
+       [HttpGet("")]
        public IActionResult GetUserDetails(){
         var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
+        Console.WriteLine(email);
         UserResponseDto userDetails = new UserResponseDto();
         userDetails.userData = null ;
+        FailDto<UserResponseDto> getUserFail = new FailDto<UserResponseDto>();
+        SuccessDto<UserResponseDto> getUserSuccess = new SuccessDto<UserResponseDto>();
         if(string.IsNullOrEmpty(email)){
-                userDetails.IsError = true ;
-                userDetails.ErrorString = "Invalid token";
-                userDetails.StatusCode = 500 ;
-                return  StatusCode(userDetails.StatusCode, userDetails);
+                getUserFail.status = 401 ;
+                getUserFail.message = "Invalid token";
+                return sendError<UserResponseDto>(getUserFail);
              }
-        userDetails = _userRepository.GetUser(email);
-        return Ok(userDetails);
+       var userDetailSuccess = _userRepository.GetUser(email);
+       return  sendResponse<UserResponseDto> (userDetailSuccess.data,"received user successfully");
+      
        }
     }
 }
