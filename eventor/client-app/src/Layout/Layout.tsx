@@ -41,7 +41,7 @@ const Layout = () => {
   }, [layout]);
   return (
     <>
-      {/* <Loader /> */}
+      <Loader />
       <TapTop />
       <div className={`page-wrapper horizontal-wrapper `}>
         <div

@@ -7,6 +7,16 @@
 
 // ico icon
 @import './vendors/icofont.scss';
+::-webkit-scrollbar {
+    width: 7px; /* Reduce width */
+    border-radius: 5px; /* Round edges */
+    background-color: #f0f0f0; /* Track color */
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    background-color: #5c61f2; /* Thumb color */
+    border-radius: 5px; /* Round edges */
+  }
 
 // Feather icons
 @import './vendors/feather-icon/feather-icon';

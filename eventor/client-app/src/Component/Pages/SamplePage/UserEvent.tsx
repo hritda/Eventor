@@ -41,7 +41,7 @@ const UserEvent = () => {
   return (
     <div className="page-body">
     
-      <ProductPageContainer event = {event} />
+      {event && <ProductPageContainer event = {event} />}
     </div>
   );
 };

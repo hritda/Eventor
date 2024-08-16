@@ -4,6 +4,7 @@ export const API_ROUTES = {
     GET_USER: '/users',
     CREATE_EVENT:'/events/users/',
     DELETE_EVENT:'/events/',
+    UPDATE_EVENT:'/events/'
     // Add more routes as needed
   };
   

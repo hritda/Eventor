@@ -12,10 +12,18 @@ import { MdDelete } from "react-icons/md";
 import { FaCalendarAlt } from "react-icons/fa";
 import { IEvent } from "../../../../../DefinedTypes/types";
 import { MdEdit } from "react-icons/md";
+import Swal from "sweetalert2";
+import useEventController from "../../../../Controllers/useEventController";
+import { useAuth } from "../../../../Providers/AuthContext";
+import useUI from "../../../../../ReduxToolkit/Hooks/useUi";
+import { useDispatch } from "react-redux";
+import { addEventFormMode } from "../../../../../ReduxToolkit/Reducers/UiSlice";
+import { Link } from "react-router-dom";
 interface Props {
-  event: IEvent | undefined;
+  event: IEvent;
 }
 const ProductDetails = ({ event }: Props) => {
+  const dispatch = useDispatch();
   let startDate = "",
     endDate = "";
   let startTime = "",
@@ -32,22 +40,59 @@ const ProductDetails = ({ event }: Props) => {
     startTime = convertTimeTo12HourFormat(event.startTime);
     endTime = convertTimeTo12HourFormat(event.endTime);
   }
+  const { deleteEvent } = useEventController();
+  const deleteUserEvent = async (eventUid: string) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Confirm",
+    }).then((isConfirm) => {
+      if (isConfirm.value == true) {
+        deleteEvent(eventUid);
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your file has been deleted.",
+          icon: "success",
+          showConfirmButton: false,
+          timer: 1000,
+        });
+      }
+      return false;
+    });
+  };
+
   return (
     <Col xxl="5" className="box-col-6 order-xxl-0 order-1">
       <Card>
         <CardBody>
           <div className="product-page-details d-flex ">
             {/* <Row className="product-page-details"> */}
-            <H2 className="me-auto">{event?.eventName}</H2>
-
-            <MdEdit className="mx-4" color="#5c61f2" size={25} />
-            <MdDelete className="mx-4" color="red" size={25} />
+            <h3 className="me-auto">{event?.eventName}</h3>
+            <Link to= {`/users/editEvent/${event.uid}`} state={{eventData : event}}>
+            <MdEdit
+              style={{ cursor: "pointer" }}
+              onClick={() => dispatch(addEventFormMode("Edit"))}
+              className="mx-4"
+              color="#5c61f2"
+              size={25}
+            />
+            </Link>
+            <MdDelete
+              style={{ cursor: "pointer" }}
+              onClick={() => deleteUserEvent(event.uid)}
+              className="mx-4"
+              color="red"
+              size={25}
+            />
             {/* </Row> */}
           </div>
-          <div className="product-price">{event?.eventType}</div>
-          <div className="my-3 fs-6">
-            <CiLocationOn color="red" size={25} />{" "}
-            <span className="ml-2">{event?.venue}</span>
+          <div className="product-price fs-6">{event?.eventType}</div>
+          <div className="my-3 fs-6 d-flex align-items-center gap-3">
+            <CiLocationOn color="red" size={25} /> <span>{event?.venue}</span>
           </div>
           {/* <ProductColor /> */}
           <hr />
@@ -59,17 +104,19 @@ const ProductDetails = ({ event }: Props) => {
           <hr />
           {/* <hr />
           <ProductTables /> */}
-          <FaCalendarAlt color="#5c61f2" size={20} />
-          <span className="mx-3">
-         
-            {startDate} - {endDate}
-          </span>
+          <div className=" fs-6 d-flex align-items-center gap-3">
+            <FaCalendarAlt color="#5c61f2" size={20} />
+            <span>
+              {startDate} - {endDate}
+            </span>
+          </div>
           <br />
-          <br />
-          <FaRegClock color="#5c61f2" size={20} />{" "}
-          <span className="mx-3">
-            {startTime} - {endTime}
-          </span>
+          <div className=" fs-6 d-flex align-items-center gap-3">
+            <FaRegClock color="#5c61f2" size={20} />{" "}
+            <span>
+              {startTime} - {endTime}
+            </span>
+          </div>
           <hr />
           {/* <ProductRate />
           <hr /> */}

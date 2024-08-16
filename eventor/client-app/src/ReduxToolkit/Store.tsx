@@ -4,6 +4,7 @@ import BookmarkHeaderSlice from "./Reducers/BookmarkHeaderSlice";
 import ThemeCustomizerSlice from "./Reducers/ThemeCustomizerSlice";
 import AuthSlice from "./Reducers/AuthSlice";
 import UiSlice from "./Reducers/UiSlice";
+import AddProductSlice from "./AddProductSlice";
 
 const Store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const Store = configureStore({
     themeCustomizer: ThemeCustomizerSlice,
     auth: AuthSlice,
     ui: UiSlice,
+    addProduct:AddProductSlice,
   },
 });
 

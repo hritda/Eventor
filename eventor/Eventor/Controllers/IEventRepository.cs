@@ -11,7 +11,7 @@ namespace Eventor.Controllers
     {
         ResponseDto<UserEventListDto> GetUserEvents(string email);
         ResponseDto<CreateEventConfirmDto> CreateEvent(AddEventDto addEvent);
-        ResponseDto<UpdateEventConfirmDto> UpdateEvent(UpdateEventDto updateThisEvent);
+        ResponseDto<UpdateEventConfirmDto> UpdateEvent(UpdateEventDto updateThisEvent, string email);
         ResponseDto<BaseDto> DeleteEvent(DeleteRequestDto deleteRequest, string email);
         ResponseDto<EventDto> EventById(string eventUid);
     }

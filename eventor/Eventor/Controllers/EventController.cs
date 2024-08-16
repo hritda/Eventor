@@ -96,13 +96,23 @@ namespace Eventor.Controllers
             return sendResponse<BaseDto>(deleteResponse.data, deleteResponse.message);
         }
 
-        [HttpPut("users/{userId}/{eventId}")]
-        public IActionResult UpdateUserEvent(UpdateEventDto updateEvent, string userId, string eventId)
+         [Authorize(AuthenticationSchemes = "token")]
+        [HttpPut("{eventId}")]
+        public IActionResult UpdateUserEvent([FromBody] UpdateEventDto updateEvent, string eventId)
         {
+            var email = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value;
             UpdateEventDto updateThisEvent = updateEvent;
             updateThisEvent.EventId = eventId;
-            updateThisEvent.OrganisedUserId = userId;
-            var updateEventResp = _eventRepository.UpdateEvent(updateThisEvent);
+            FailDto<UpdateEventConfirmDto> updateFailed = new FailDto<UpdateEventConfirmDto>();
+             if (string.IsNullOrEmpty(email))
+            {
+                
+                updateFailed.Errors = null;
+                updateFailed.message = "Invalid token";
+                updateFailed.status = 500;
+                return sendError<UpdateEventConfirmDto>(updateFailed);
+            }
+            var updateEventResp = _eventRepository.UpdateEvent(updateThisEvent,email);
             if (updateEventResp.GetType() == typeof(SuccessDto<UpdateEventConfirmDto>))
             {
                 return sendResponse<UpdateEventConfirmDto>(updateEventResp.data, updateEventResp.message);

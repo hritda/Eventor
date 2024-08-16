@@ -1,27 +1,29 @@
-import { Card, Col, Container, Row } from 'reactstrap'
-import ImageSlider from './ImageSlider/ImageSlider'
-import ProductDetails from './ProductDetails/ProductDetails'
-import ProductBrand from './ProductBrand/ProductBrand'
-import ProductStatus from './ProductStatus/ProductStatus'
-import ClothsDetails from './ClothsDetails/ClothsDetails'
-import Breadcrumbs from '../../../../CommonElements/Breadcrumbs/Breadcrumbs'
-import { Ecommerce, ProductPages } from '../../../../utils/Constant'
-import { useEffect, useState } from 'react'
-import { IEvent } from '../../../../DefinedTypes/types'
+import { Card, Col, Container, Row } from "reactstrap";
+import ImageSlider from "./ImageSlider/ImageSlider";
+import ProductDetails from "./ProductDetails/ProductDetails";
+import ProductBrand from "./ProductBrand/ProductBrand";
+import ProductStatus from "./ProductStatus/ProductStatus";
+import ClothsDetails from "./ClothsDetails/ClothsDetails";
+import Breadcrumbs from "../../../../CommonElements/Breadcrumbs/Breadcrumbs";
+import { Ecommerce, ProductPages } from "../../../../utils/Constant";
+import { useEffect, useState } from "react";
+import { IEvent } from "../../../../DefinedTypes/types";
+import Swal from "sweetalert2";
+import useEventController from "../../../Controllers/useEventController";
 
 interface Props {
-  event: IEvent|undefined
+  event: IEvent ;
 }
-const ProductPageContainer = ({event}: Props) => {
- 
+const ProductPageContainer = ({ event }: Props) => {
   return (
     <>
-      {/* <Breadcrumbs mainTitle={ProductPages} parent={Ecommerce} /> */}
+      <Breadcrumbs mainTitle="" parent="events" />
+
       <Container fluid>
         <div>
           <Row className="product-page-main p-0">
             <ImageSlider />
-            <ProductDetails event = {event}/>
+            <ProductDetails event={event} />
             {/* <Col xxl="3" md="6" className="box-col-6">
               <ProductBrand />
               <ProductStatus />
@@ -34,8 +36,9 @@ const ProductPageContainer = ({event}: Props) => {
           </Row>
         </Card> */}
       </Container>
+     
     </>
-  )
-}
+  );
+};
 
-export default ProductPageContainer
+export default ProductPageContainer;

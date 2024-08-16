@@ -114,14 +114,14 @@ const EventCard: React.FC<Props> = ({ event }: Props) => {
               src="https://picsum.photos/300/200"
               style={{ width: "100%" }}
             />
-            <br/>
+            <br />
             <h3 className="my-2">{event?.eventName}</h3>
           </div>
           {/* <br/> */}
           <div className="product-price fs-6">{event?.eventType}</div>
-          <div className="my-3 fs-6">
+          <div className="my-3 fs-6 d-flex align-items-center gap-2">
             <CiLocationOn color="red" size={25} />{" "}
-            <span className="ml-2">{event?.venue}</span>
+            <span >{event?.venue}</span>
           </div>
           {/* <ProductColor /> */}
           <hr />
@@ -132,17 +132,23 @@ const EventCard: React.FC<Props> = ({ event }: Props) => {
           </P>
           <hr /> */}
           {/* <hr />
+          
           <ProductTables /> */}
-          <FaCalendarAlt color="#5c61f2" size={20} />
-          <span className="mx-3">
-            {startDate} - {endDate}
-          </span>
+          <div className="fs-6 d-flex align-items-center gap-3 ">
+            <FaCalendarAlt color="#5c61f2" size={20} />
+
+            <span>
+              {startDate} - {endDate}
+            </span>
+          </div>
           <br />
-          <br/>
-          <FaRegClock color="#5c61f2" size={20} />{" "}
-          <span className="mx-3">
-            {startTime} - {endTime}
-          </span>
+
+          <div className=" fs-6 d-flex align-items-center  gap-3">
+            <FaRegClock color="#5c61f2" size={20} />
+            <span>
+              {startTime} - {endTime}
+            </span>
+          </div>
         </CardBody>
         <CardBody className="d-flex justify-content-between">
           <Link to={`${process.env.PUBLIC_URL}/events/${event.uid}`}>

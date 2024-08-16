@@ -82,7 +82,7 @@ namespace Eventor.Controllers
         {
             User u = (User)_context.Users.FirstOrDefault(u => u.Uid == addEvent.OrganisedUserId);
             CreateEventConfirmDto createEventResp = new CreateEventConfirmDto();
-            bool sameName = _context.Events.Include(e => e.OrganisedBy).Any(e => e.EventName == addEvent.EventName && e.OrganisedBy.Uid == addEvent.OrganisedUserId);
+            bool sameName = _context.Events.Include(e => e.OrganisedBy).Any(e => e.EventName == addEvent.EventName && e.OrganisedBy.Uid == addEvent.OrganisedUserId && e.DeleteFlag == 0);
             FailDto<CreateEventConfirmDto> createEventFail = new FailDto<CreateEventConfirmDto>();
             SuccessDto<CreateEventConfirmDto> createEventSuccess = new SuccessDto<CreateEventConfirmDto>();
             if (sameName)
@@ -199,12 +199,15 @@ namespace Eventor.Controllers
 
             return deleteFailed;
         }
-        public ResponseDto<UpdateEventConfirmDto> UpdateEvent(UpdateEventDto updateThisEvent)
+        public ResponseDto<UpdateEventConfirmDto> UpdateEvent(UpdateEventDto updateThisEvent, string email)
         {
 
             UpdateEventConfirmDto updateEventResp = new UpdateEventConfirmDto();
             Event eventToUpdate = _context.Events.Include(e => e.OrganisedBy).FirstOrDefault(e => e.Uid == updateThisEvent.EventId);
-
+            User user = _helper.IsUserExistByEmail(email);
+            if(user!=null){
+                eventToUpdate.OrganisedBy = user ;
+            }
             eventToUpdate.Venue = updateThisEvent.Venue;
             //eventToUpdate.OrganisedBy = eventToUpdate.OrganisedBy;
             eventToUpdate.StartDate = updateThisEvent.StartDate;

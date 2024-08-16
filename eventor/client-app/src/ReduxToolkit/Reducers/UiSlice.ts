@@ -5,6 +5,8 @@ type ModalTypes = "CreateEvent" | undefined;
 
 export type RefetchTypes = "EventList" | undefined;
 
+export type EventFormModeTypes = "Create" | "Edit" | undefined ;
+
 type IReduxLoading = {
   isLoading: boolean;
   label?: string | undefined;
@@ -17,6 +19,7 @@ const INITIAL_STATE = {
   } as IReduxLoading,
   modalType: [] as ModalTypes[],
   refetch: [] as RefetchTypes[],
+  eventFormMode: "Create" as EventFormModeTypes  ,
 };
 
 const UiSlice = createSlice({
@@ -41,9 +44,12 @@ const UiSlice = createSlice({
     stopRefetch: (state, action: PayloadAction<RefetchTypes>) => {
       state.refetch = without(state.refetch, action?.payload);
     },
+    addEventFormMode:(state, action: PayloadAction<EventFormModeTypes>) => {
+      state.eventFormMode = action?.payload ;
+    }
   },
 });
 
-export const { setLoading, openModal, closeModal, closeAllModals, startRefetch, stopRefetch } =
+export const { setLoading, openModal, closeModal, closeAllModals, startRefetch, stopRefetch, addEventFormMode} =
   UiSlice.actions;
 export default UiSlice.reducer;

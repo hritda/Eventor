@@ -4,8 +4,12 @@ import { Btn, H4, Image, LI, P, UL } from "../../AbstractElements";
 import { dynamicImage } from "../../Service";
 import useUI from "../../ReduxToolkit/Hooks/useUi";
 import { useDispatch, useSelector } from "react-redux";
-import { API_ROUTES,BASE_URL } from "../../Routes/apiRoutes";
-import { closeModal, openModal, startRefetch } from "../../ReduxToolkit/Reducers/UiSlice";
+import { API_ROUTES, BASE_URL } from "../../Routes/apiRoutes";
+import {
+  closeModal,
+  openModal,
+  startRefetch,
+} from "../../ReduxToolkit/Reducers/UiSlice";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import { FormErrors, FormValues } from "../../DefinedTypes/types";
 import { useAuth } from "../Providers/AuthContext";
@@ -26,8 +30,8 @@ import { useEffect } from "react";
 interface CreateEventModalProps {}
 const CreateEventModal: React.FC<CreateEventModalProps> = ({}) => {
   const ModalName = "CreateEvent";
-  const { modalType} = useUI();
-  const {auth,token} = useAuth();
+  const { modalType } = useUI();
+  const { auth, token } = useAuth();
   const dispatch = useDispatch();
 
   const initialEventValues: FormValues = {
@@ -40,8 +44,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({}) => {
     venue: "",
     eventType: "",
   };
- 
-  
+
   const validate = (values: FormValues): FormErrors => {
     console.log("entered validation form");
     const errors: FormErrors = {};
@@ -89,10 +92,10 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({}) => {
   ) => {
     console.log("entered submit");
     console.log(values);
-   
+
     const userId = auth?.uid;
-    let tokenValue = token ; 
-    
+    let tokenValue = token;
+
     // handleToggleModal(false);
     const payload = {
       venue: values.venue,
@@ -103,7 +106,7 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({}) => {
       startTime: `${values.startTime}:00`,
       endTime: `${values.endTime}:00`,
       eventType: values.eventType,
-      organisedUserId: userId
+      organisedUserId: userId,
     };
     const requestOptions = {
       method: "POST",
@@ -111,34 +114,35 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({}) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${tokenValue}`,
       },
-      body: JSON.stringify(payload)
+      body: JSON.stringify(payload),
     };
     handleToggleModal(false);
     fetch(`${BASE_URL}${API_ROUTES.CREATE_EVENT}${userId}`, requestOptions)
-    .then((response)=>response.json())
-    .then((data)=>{
-      if(data.status == 200){
-        console.log("event created",data);
-        dispatch(startRefetch("EventList"));
-        Swal.fire({
-          title: "Yay!",
-          text: `${data.message}`,
-          icon: "success",
-          timer: 1000,
-          showConfirmButton:false
-        });
-      } else {
-        console.log("event creation failed", data);
-        Swal.fire({
-          title: "OOPS!",
-          text: `${data.message}`,
-          icon: "error",
-          confirmButtonText: "OK"
-        });
-      }
-    }).catch((error) => {
-      console.log(error);
-    })
+      .then((response) => response.json())
+      .then((data) => {
+        if (data.status == 200) {
+          console.log("event created", data);
+          dispatch(startRefetch("EventList"));
+          Swal.fire({
+            title: "Yay!",
+            text: `${data.message}`,
+            icon: "success",
+            timer: 1000,
+            showConfirmButton: false,
+          });
+        } else {
+          console.log("event creation failed", data);
+          Swal.fire({
+            title: "OOPS!",
+            text: `${data.message}`,
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   const handleToggleModal = (value: boolean) => {
@@ -152,18 +156,22 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({}) => {
     >
       <ModalHeader className="d-flex flex-row justify-content-between align-items-center pt-2 px-1">
         <span className="fs-5">Create Event</span>
-      
+
         <Btn
           className="close-btn"
           onClick={() => handleToggleModal(false)}
           aria-label="Close"
-          style={{ position: "absolute", top:"15px",right:"0px", marginRight:"0px"}}
+          style={{
+            position: "absolute",
+            top: "15px",
+            right: "0px",
+            marginRight: "0px",
+          }}
         >
           <AiFillCloseSquare color="red" size={30} />
         </Btn>
-         
-        </ModalHeader>
-      
+      </ModalHeader>
+
       <div className="modal-toggle-wrapper">
         <Formik
           initialValues={initialEventValues}
@@ -208,22 +216,26 @@ const CreateEventModal: React.FC<CreateEventModalProps> = ({}) => {
               </FormGroup>
               <FormGroup className="mx-3">
                 <Label htmlFor="eventType">Mode of Event</Label>
-                <Input 
+                <Input
                   id="eventType"
                   name="eventType"
                   onChange={handleChange}
                   onBlur={handleBlur}
                   type="select"
-                  value = {values.eventType}
-                  invalid = {false}
+                  value={values.eventType}
+                  invalid={false}
                 >
-                  <option value = "online" label="online">Online</option>
-                  <option value = "offline" label = "offline">Offline</option>
+                  <option value="online" label="online">
+                    Online
+                  </option>
+                  <option value="offline" label="offline">
+                    Offline
+                  </option>
                 </Input>
               </FormGroup>
               <FormGroup className="mx-3">
                 <Label htmlFor="startDate">Event Start Date</Label>
-                <Input 
+                <Input
                   id="startDate"
                   name="startDate"
                   onChange={handleChange}
